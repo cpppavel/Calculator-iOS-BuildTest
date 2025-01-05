@@ -1,0 +1,49 @@
+name: Build and Test iOS App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-ios:
+    name: Build and Boot iOS Simulator
+    runs-on: macos-latest
+
+    steps:
+      # 1. Checkout the code
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      # 3. Install dependencies and sync Capacitor
+      - name: Install Dependencies and Sync
+        run: |
+          npm install
+          npx cap sync ios
+
+      # 4. Start iOS Simulator
+      - name: Start iOS Simulator
+        run: |
+          # Boot the simulator
+          device="iPhone 14"
+          xcrun simctl boot "$device"
+          open -a Simulator
+
+      # 5. Build iOS App
+      - name: Build iOS App for Simulator
+        env:
+          CI: true
+        run: |
+          cd ios/App
+          xcodebuild \
+            -workspace App.xcworkspace \
+            -scheme App \
+            -sdk iphonesimulator \
+            -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest' \
+            build
