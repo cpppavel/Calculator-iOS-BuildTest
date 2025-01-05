@@ -22,9 +22,10 @@ jobs:
         with:
           node-version: 16
 
-      # 3. Install dependencies and sync Capacitor
+      # 3. Install dependencies and sync Capacitor (ensure correct working directory)
       - name: Install Dependencies and Sync
         run: |
+          cd path/to/your/project # Make sure you are in the directory where package.json is
           npm install
           npx cap sync ios
 
