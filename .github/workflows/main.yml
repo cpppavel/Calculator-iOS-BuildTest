@@ -22,12 +22,11 @@ jobs:
         with:
           node-version: 16
 
-# 3. Install dependencies and sync Capacitor (ensure correct working directory)
-- name: Install Dependencies and Sync
-  run: |
-    cd path/to/your/project # Update this with the correct path to where your package.json is located
-    npm install
-    npx cap sync ios
+      # 3. Install dependencies and sync Capacitor
+      - name: Install Dependencies and Sync
+        run: |
+          npm install          # Install Node.js dependencies (assuming package.json is in the root folder)
+          npx cap sync ios     # Sync Capacitor with iOS platform
 
       # 4. Start iOS Simulator
       - name: Start iOS Simulator
@@ -37,12 +36,12 @@ jobs:
           xcrun simctl boot "$device"
           open -a Simulator
 
-      # 5. Build iOS App
+      # 5. Build iOS App for Simulator
       - name: Build iOS App for Simulator
         env:
           CI: true
         run: |
-          cd ios/App
+          cd ios/App           # Go to the iOS project folder
           xcodebuild \
             -workspace App.xcworkspace \
             -scheme App \
